@@ -1,83 +1,37 @@
-# Terminal Command Keys
+# Q HHVM Test Runner
 
-Assign terminal commands to a keybinding.
+This test runner was created during Hack Week Spring 2019. The goal was to minimize errors in executing tests on full-stack environments due to misspellings and or forgotten command flags. The test runner allows for the user to execute all tests within a test file or a single test (when the test name is highlighted) using a series of keypresses. 
 
-Open your keybindings.json (Command Palette => 'Preferences: Open Keyboard Shortcut File') and add an entries like these:
+### Instructions to Use
+1. Download the package 
+2. In VS Code, press Command + Shift + P to pull up the Command Palette.
+3. Type `Install from VSIX` and select
+4. Select the downloaded package
 
 ```
-  {
-      "key": "cmd+ctrl+r",
-      "command": "terminalCommandKeys.run",
-      "args": {
-          "cmd": "echo 'hello world'"
-      }
-  },
-  {
-      "key": "cmd+shift+r",
-      "command": "terminalCommandKeys.run",
-      "args": {
-          "cmd": "echo 'hello from file: ${file}'",
-          "newTerminal": false,
-          "saveAllFiles": true,
-          "showTerminal": true
-      }
-  }
+Commands are the following when in a Hack test file.
+
+To run a full test file:
+- Command + Control + T runs with --no-watch (does not watch for changes in test file)
+  - Equivalent to yarn fs-ctl test-hhvm QSetTest --no-watch
+- Command + Control + Y (watches for changes in test file)
+  - Equivalent to yarn fs-ctl test-hhvm QSetTest
+
+To run an individual test, highlight the name:
+- Command + Control + T runs with --no-watch (does not watch for changes in test file)
+  - Equivalent to yarn fs-ctl test-hhvm QSetTest::testCannotMakeDmcaPrivacyLockedSetsPublic --no-watch
+- Command + Control + Y (watches for changes in test file)
+  - Equivalent to yarn fs-ctl test-hhvm QSetTest::testCannotMakeDmcaPrivacyLockedSetsPublic
 ```
 
-The `args` entry has these entries:
+### Instructions to Generate VSIX File
+For any new features or modifications, be sure to update the version in `package.json` as this is used to generate the file name.
 
----
-### "cmd" : required
-
-This is the command that will be passed to the terminal when it is opened. The following substitutions are available to be used:
-
-- ${line}
-- ${relativeFile}
-- ${file}
-- ${workspaceRoot}
-
-Here are some examples:
-
-- "cmd": "rspec ${file}"
-- "cmd": "rspec ${file}:${line}"
-
-If you need to run different commands for different file types, but wish to use the same keycombo, check out [vscode's "when" clauses](https://code.visualstudio.com/docs/getstarted/keybindings#_when-clause-contexts).
+1. Ensure `vsce` is installed (`npm i -g vsce`)
+2. Run `vsce package` and follow prompts
 
 ---
 
-### "newTerminal" : optional, default false
+### About
 
- If true, the terminal is destroyed and a fresh terminal is created for each run. You cannot scroll up to review previous commands/results.
-
-If false, re-uses the same terminal for each command run. You can scroll up to review previous commands/results.
-
----
-
-### "saveAllFiles" : optional, default true
-
-If true, saves all files before running the command.
-
-If false, does not save all files before running the command.
-
----
-
-### "showTerminal" : options, default true
-
-If true, ensures that the terminal is showing when running the command.
-
-If false, does not change the visibility of the terminal when running the command.
-
----
-
-## About
-
-This extension inspired by [run-in-terminal](https://github.com/kortina/run-in-terminal) and [send-to-terminal](https://github.com/malkomalko/send-to-terminal).
-
-The differences (at this time):
-
-- All config lives in keybindings file (no entries in user settings)
-- Configuration per command
-- Option to save all files before execution
-- Option to reveal the terminal before execution
-- Option to use a new terminal for each execution
-- Scrolls to bottom of terminal when running a command
+This extension inspired by [terminal-command-keys](https://github.com/petekinnecom/terminal-command-keys).

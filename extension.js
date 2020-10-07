@@ -1,5 +1,6 @@
 const vscode = require('vscode');
-const path = require('path')
+
+const TERMINAL_NAME = "q-hhvm-test-runner";
 
 // BEGIN TERMINAL
 //
@@ -17,14 +18,14 @@ const path = require('path')
 // event was triggered by the user or the extension.
 let _activeTerminal = null;
 vscode.window.onDidCloseTerminal((terminal) => {
-    if (terminal.name === 'terminal-command-keys') {
+    if (terminal.name === TERMINAL_NAME) {
         if (!terminal.tckDisposed) {
             disposeTerminal();
         }
     }
 });
 function createTerminal() {
-    _activeTerminal = vscode.window.createTerminal('terminal-command-keys');
+    _activeTerminal = vscode.window.createTerminal(TERMINAL_NAME);
     return _activeTerminal;
 }
 function disposeTerminal() {
@@ -46,14 +47,18 @@ function getTerminal(newTerminal) {
 // END TERMINAL
 
 function resolve(editor, command) {
-    var relativeFile = "." + editor.document.fileName.replace(vscode.workspace.rootPath, "");
-    var line = editor.selection.active.line + 1;
+    var fileNameNoExt = editor.document.fileName.replace(vscode.workspace.rootPath, "").split('/').pop().split('.').shift();
 
-    return command
-        .replace(/\${line}/g, `${line}`)
-        .replace(/\${relativeFile}/g, relativeFile)
-        .replace(/\${file}/g, `${editor.document.fileName}`)
-        .replace(/\${workspaceRoot}/g, `${vscode.workspace.rootPath}`);
+    let newCommand = command.cmd
+        .replace('{fileNameNoExt}', fileNameNoExt);
+
+    if (command.textHighlight) {
+        let selection = editor.selection; 
+        let highlightText = editor.document.getText(selection);
+        newCommand = newCommand.replace('{highlightText}', highlightText);
+    }
+
+    return newCommand;
 }
 
 function run(command, showTerminal, newTerminal) {
@@ -82,7 +87,7 @@ function handleInput(editor, args) {
     maybeSave(args.saveAllFiles).then(() => {
         const cmd = resolve(
             editor,
-            args.cmd
+            args
         )
 
         run(

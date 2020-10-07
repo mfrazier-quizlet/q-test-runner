@@ -1,10 +1,10 @@
 {
-    "name": "terminal-command-keys",
-    "displayName": "terminal-command-keys",
-    "description": "Assign a terminal command to a keybinding",
-    "version": "0.1.0",
-    "publisher": "petekinnecom",
-    "repository": "petekinnecom/terminal-command-keys",
+    "name": "q-test-runner",
+    "displayName": "Quizlet Test Runner",
+    "description": "",
+    "version": "0.1.0-17",
+    "repository": "mfrazier-quizlet/q-test-runner",
+    "publisher": "mfrazier-quizlet",
     "engines": {
         "vscode": "^1.23.0"
     },
@@ -21,6 +21,54 @@
                 "command": "terminalCommandKeys.run",
                 "title": "Run Terminal Command"
             }
+        ],
+        "keybindings": [
+            {
+                "mac": "cmd+ctrl+t",
+                "command": "terminalCommandKeys.run",
+                "when": "resourceExtname == .php",
+                "args": {
+                    "cmd": "yarn fs-ctl test-hhvm {fileNameNoExt} --no-watch",
+                    "newTerminal": false,
+                    "saveAllFiles": true,
+                    "showTerminal": true
+                }
+            },
+            {
+                "mac": "cmd+ctrl+y",
+                "command": "terminalCommandKeys.run",
+                "when": "resourceExtname == .php",
+                "args": {
+                    "cmd": "yarn fs-ctl test-hhvm {fileNameNoExt}",
+                    "newTerminal": false,
+                    "saveAllFiles": true,
+                    "showTerminal": true
+                }
+            },
+            {
+                "mac": "cmd+ctrl+t",
+                "command": "terminalCommandKeys.run",
+                "when": "resourceExtname == .php && editorHasSelection",
+                "args": {
+                    "cmd": "yarn fs-ctl test-hhvm {fileNameNoExt}::{highlightText} --no-watch",
+                    "textHighlight": true,
+                    "newTerminal": false,
+                    "saveAllFiles": true,
+                    "showTerminal": true
+                }
+            },
+            {
+                "mac": "cmd+ctrl+y",
+                "command": "terminalCommandKeys.run",
+                "when": "resourceExtname == .php && editorHasSelection",
+                "args": {
+                    "cmd": "yarn fs-ctl test-hhvm {fileNameNoExt}::{highlightText}",
+                    "textHighlight": true,
+                    "newTerminal": false,
+                    "saveAllFiles": true,
+                    "showTerminal": true
+                }
+            }
         ]
     },
     "scripts": {
@@ -28,10 +76,6 @@
         "test": "node ./node_modules/vscode/bin/test"
     },
     "devDependencies": {
-        "typescript": "^2.6.1",
-        "vscode": "^1.1.6",
-        "eslint": "^4.11.0",
-        "@types/node": "^7.0.43",
-        "@types/mocha": "^2.2.42"
+        "vscode": "^1.1.6"
     }
 }
